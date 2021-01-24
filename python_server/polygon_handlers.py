@@ -42,6 +42,7 @@ def polygon_interpolate(polygon: list,
 
     # Begin interpolating
     parent_polygon = polygon
+    min_area_diff = 10
     for iteration in range(1, max_iter + 1):
         if Polygon(parent_polygon).area < min_area:
             break
@@ -68,7 +69,8 @@ def polygon_interpolate(polygon: list,
             # new_polygon = polygon_simplify_curve_edge(new_polygon)
             child_polygon = polygon_simplify(child_polygon, simplify_depth)
             simplify_depth += 1
-        if Polygon(parent_polygon).area <= Polygon(child_polygon).area:
+        if Polygon(output[len(output) - 1]).area - Polygon(child_polygon).area <= min_area_diff:
+            # Remove polygons with few area difference
             break
         output[len(output)] = child_polygon
         parent_polygon = child_polygon
